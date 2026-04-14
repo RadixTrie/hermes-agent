@@ -1068,7 +1068,15 @@ def _cprint(text: str):
     StdoutProxy.  Routing through print_formatted_text(ANSI(...)) lets
     prompt_toolkit parse the escapes and render real colors.
     """
-    _pt_print(_PT_ANSI(text))
+    try:
+        _pt_print(_PT_ANSI(text))
+    except Exception:
+        import sys
+        try:
+            sys.stdout.buffer.write((text + "\n").encode('utf-8', errors='replace'))
+            sys.stdout.flush()
+        except Exception:
+            pass
 
 
 # ---------------------------------------------------------------------------
